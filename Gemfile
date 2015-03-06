@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'sqlite3'
 
 # TODO: Add to gemspec once gem is released
-gem 'spree', :path => '../spree/' 
+gem 'spree', :git => 'git@bitbucket.org:charlie_green/spreefork.git' 
 
 gem 'factory_girl_rails', '~> 4.5.0', :group => :test
 gem 'active_shipping', :github => "Shopify/active_shipping", :branch => 'master'
