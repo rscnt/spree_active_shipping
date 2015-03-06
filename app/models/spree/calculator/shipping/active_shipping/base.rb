@@ -10,7 +10,7 @@ module Spree
   module Calculator::Shipping
     module ActiveShipping
       class Base < ShippingCalculator
-        include ActiveMerchant::Shipping
+        include ActiveShipping
 
         def self.service_name
           self.description
