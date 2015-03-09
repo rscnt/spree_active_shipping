@@ -4,13 +4,16 @@
 # Digest::MD5 is used for cache_key generation.
 require 'digest/md5'
 require 'active_merchant'
+require 'active_shipping'
 require_dependency 'spree/calculator'
+
+ActiveShippingLib = ActiveShipping
 
 module Spree
   module Calculator::Shipping
     module ActiveShipping
       class Base < ShippingCalculator
-        include ActiveShipping
+        include ActiveShippingLib
 
         def self.service_name
           self.description
