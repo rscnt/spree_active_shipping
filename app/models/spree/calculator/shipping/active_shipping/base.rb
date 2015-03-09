@@ -108,7 +108,7 @@ module Spree
             return rate_hash
           rescue ActiveMerchant::ActiveMerchantError => e
 
-            if [ActiveMerchant::ResponseError, ActiveShipping::ResponseError].include?(e.class) && e.response.is_a?(ActiveShipping::Response)
+            if [ActiveMerchant::ResponseError, ::ActiveShipping::ResponseError].include?(e.class) && e.response.is_a?(::ActiveShipping::Response)
               params = e.response.params
               if params.has_key?("Response") && params["Response"].has_key?("Error") && params["Response"]["Error"].has_key?("ErrorDescription")
                 message = params["Response"]["Error"]["ErrorDescription"]
@@ -136,8 +136,8 @@ module Spree
               response = carrier.find_time_in_transit(origin, destination, packages)
               return response
             end
-          rescue ActiveShipping::ResponseError => re
-            if re.response.is_a?(ActiveShipping::Response)
+          rescue ::ActiveShipping::ResponseError => re
+            if re.response.is_a?(::ActiveShipping::Response)
               params = re.response.params
               if params.has_key?("Response") && params["Response"].has_key?("Error") && params["Response"]["Error"].has_key?("ErrorDescription")
                 message = params["Response"]["Error"]["ErrorDescription"]
