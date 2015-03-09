@@ -1,45 +1,94 @@
 <% content_for :page_actions do %>
-  <li><%= link_to_with_icon('icon-plus', Spree.t(:new_package), new_admin_product_product_package_url(@product), :id => 'new_product_package_link', :class => 'button') %></li>
+    <%= button_link_to Spree.t(:new_package), new_admin_product_product_package_url(@product), 
+        :id => 'new_product_package_link', :class => 'button' %> 
 <% end %>
 
+<%# <% content_for :page_actions do %>
+    <%#     <li><%= link_to_with_icon('icon-plus', Spree.t(:new_package),
+        <%#                               new_admin_product_product_package_url(@product),
+        <%#                               :id => 'new_product_package_link', :class =>
+        <%#     'button') %></li>
+    <%# <% end %>
+
 <% content_for :head do %>
-  <%= javascript_include_tag 'admin/product_packages/index.js' %>
+    <%= javascript_include_tag 'admin/product_packages/index.js' %>
 <% end %>
+
+
 
 <%# render :partial => 'spree/admin/shared/product_sub_menu' %>
 <%# render :partial => 'spree/admin/shared/product_tabs', :locals => { :current => 'Product Packages' } %>
 
+
+<%= render :partial => 'spree/admin/shared/product_tabs', :locals => { :current => 'Product Details' } %>
+<%= render :partial => 'spree/admin/shared/error_messages', :locals => { :target => @product } %>
+
 <div id="product_packages" data-hook></div>
 
 <% unless @product.reload.product_packages.any? %>
-  <div class="no-objects-found">
-    <%= Spree.t(:no_packages_found) %>.
-  </div>
+    <div class="no-objects-found">
+        <%= Spree.t(:no_packages_found) %>.
+    </div>
 <% else %>
-  <table class="index">
+    <table class="index">
+        <thead data-hook="option_header">
+            <tr data-hook="product_packages_header">
+                <th><%= Spree.t(:length) %></th>
+                <th><%= Spree.t(:width) %></th>
+                <th><%= Spree.t(:height) %></th>
+                <th><%= Spree.t(:weight) %></th>
+                <th class="actions"></th>
+            </tr>
+        </thead>
+        <tbody id="product_packages" data-hook>
+            <% @product.product_packages.each do |package| %>
+                <tr id="<%= dom_id(package) %>" data-hook="product_package_row">
+                    <td><%= package.length %></td>
+                    <td><%= package.width %></td>
+                    <td><%= package.height %></td>
+                    <td><%= package.weight %></td>
+                    <td class="actions">
+                        <%= link_to_with_icon 'icon-edit', Spree.t(:edit), edit_admin_product_product_package_url(@product, package), :class => "edit", :no_text => true, :data => {:action => 'edit'} %>
+                        &nbsp;
+                        <%= link_to_delete package, { :url => admin_product_product_package_url(@product, package), :no_text => true }%>
+                    </td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+<% end %>
+
+
+<% if  @product.reload.product_packages.any? %>
+  <table class="table index" id="listing_packages">
     <thead data-hook="option_header">
-      <tr data-hook="product_packages_header">
-        <th><%= Spree.t(:length) %></th>
-        <th><%= Spree.t(:width) %></th>
-        <th><%= Spree.t(:height) %></th>
-        <th><%= Spree.t(:weight) %></th>
+      <tr data-hook="product_packages_header" class="info">
+        <th class="text-center"><%= Spree.t(:length) %></th>
+        <th class="text-center"><%= Spree.t(:width) %></th>
+        <th class="text-center"><%= Spree.t(:height) %></th>
+        <th class="text-center"><%= Spree.t(:weight) %></th>
         <th class="actions"></th>
       </tr>
     </thead>
     <tbody id="product_packages" data-hook>
       <% @product.product_packages.each do |package| %>
-        <tr id="<%= dom_id(package) %>" data-hook="product_package_row">
-          <td><%= package.length %></td>
-          <td><%= package.width %></td>
-          <td><%= package.height %></td>
-          <td><%= package.weight %></td>
-          <td class="actions">
-            <%= link_to_with_icon 'icon-edit', Spree.t(:edit), edit_admin_product_product_package_url(@product, package), :class => "edit", :no_text => true, :data => {:action => 'edit'} %>
-            &nbsp;
-            <%= link_to_delete package, { :url => admin_product_product_package_url(@product, package), :no_text => true }%>
-          </td>
-        </tr>
+          <tr id="<%= dom_id(package) %>" data-hook="product_package_row">
+              <td class="text-center"><%= package.length %></td>
+              <td class="text-center"><%= package.width %></td>
+              <td class="text-center"><%= package.height %></td>
+              <td class="text-center"><%= package.weight %></td>
+              <td class="actions">
+                  <%= link_to_with_icon 'edit', Spree.t(:edit), edit_admin_product_product_package_url(@product, package), :class => "edit btn btn-sm btn btn-primary with-tip action-edit no-text", :no_text => true, :data => {:action => 'edit'} %>
+                  &nbsp;
+                  <%= link_to_delete package, { :url => admin_product_product_package_url(@product, package), :no_text => true }%>
+              </td>
+          </tr>
       <% end %>
     </tbody>
   </table>
+<% else %>
+  <div class="no-objects-found alert alert-info no-objects-found">
+    <%= Spree.t(:no_packages_found) %>
+    <%= link_to Spree.t(:add_one), new_object_url %>!
+  </div>
 <% end %>
