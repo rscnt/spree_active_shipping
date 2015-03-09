@@ -11,7 +11,7 @@ module Spree
   module Calculator::Shipping
     module ActiveShipping
       class Base < ShippingCalculator
-        include ActiveShipping
+        include ::ActiveShipping
 
         def self.service_name
           self.description
@@ -51,12 +51,12 @@ module Spree
         def timing(line_items)
           order = line_items.first.order
           # TODO: Figure out where stock_location is supposed to come from.
-          origin= ActiveShipping::Location.new(:country => stock_location.country.iso,
+          origin= Location.new(:country => stock_location.country.iso,
                                :city => stock_location.city,
                                :state => (stock_location.state ? stock_location.state.abbr : stock_location.state_name),
                                :zip => stock_location.zipcode)
           addr = order.ship_address
-          destination = ActiveShipping::Location.new(:country => addr.country.iso,
+          destination = Location.new(:country => addr.country.iso,
                                      :state => (addr.state ? addr.state.abbr : addr.state_name),
                                      :city => addr.city,
                                      :zip => addr.zipcode)
@@ -271,7 +271,7 @@ module Spree
         end
 
         def build_location address
-          ActiveShipping::Location.new(:country => address.country.iso,
+          Location.new(:country => address.country.iso,
                        :state   => fetch_best_state_from_address(address),
                        :city    => address.city,
                        :zip     => address.zipcode)
