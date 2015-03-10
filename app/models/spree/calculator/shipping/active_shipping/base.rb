@@ -85,7 +85,9 @@ module Spree
 
         def country_weight_error? package
           max_weight = max_weight_for_country(package.order.ship_address.country)
-          raise Spree::ShippingError.new("#{I18n.t(:shipping_error)}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces.") unless valid_weight_for_package?(package, max_weight)
+          result = valid_weight_for_package?(package, max_weight)
+          raise Spree::ShippingError.new("#{I18n.t(:shipping_error)}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces.") unless result 
+          result
         end
 
         # zero weight check means no check
